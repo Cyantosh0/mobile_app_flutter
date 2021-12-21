@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'api.dart';
 
 class Home extends StatefulWidget {
   const Home({Key? key}) : super(key: key);
@@ -18,11 +19,14 @@ class _HomeState extends State<Home> {
 
   @override
   Widget build(BuildContext context) {
-    return Center(
-        child: Column(mainAxisAlignment: MainAxisAlignment.center, children: [
-      Text("$data"),
-      const SizedBox(height: 10),
-      ElevatedButton(onPressed: increase, child: const Text("Increase"))
-    ]));
+    return Column(children: [
+      Center(
+          child: Column(mainAxisAlignment: MainAxisAlignment.center, children: [
+        Text("$data"),
+        const SizedBox(height: 10),
+        ElevatedButton(onPressed: increase, child: const Text("Increase"))
+      ])),
+      const API()
+    ]);
   }
 }
