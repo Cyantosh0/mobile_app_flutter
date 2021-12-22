@@ -1,7 +1,6 @@
-import 'dart:convert';
-
 import 'package:flutter/material.dart';
-import 'package:http/http.dart' as http;
+import 'package:dio/dio.dart';
+import 'package:mobile_app_flutter/employee.dart';
 
 class API extends StatefulWidget {
   const API({Key? key}) : super(key: key);
@@ -11,17 +10,22 @@ class API extends StatefulWidget {
 }
 
 class _APIState extends State<API> {
+  final String baseUrl = "http://192.168.1.111:5000";
+
   getData() async {
-    var data = [];
-    var res = await http.get(Uri.parse("localhost:5000/get-data"));
-    var jsonData = jsonDecode(res.body);
-
-    for (var i in jsonData) {
-      EmployeeModel d = EmployeeModel(i['id'], i['name'], i['age']);
-      data.add(d);
+    List<EmployeeModel> employees = [];
+    final Dio dio = Dio();
+    try {
+      var res = await dio.get("$baseUrl/get-data");
+      List<EmployeeModel>.from(
+        employees = res.data["data"].map(
+          (value) => EmployeeModel.fromJson(value),
+        ),
+      );
+    } on DioError catch (e) {
+      print(e);
     }
-
-    return data;
+    return employees;
   }
 
   @override
@@ -31,21 +35,16 @@ class _APIState extends State<API> {
       builder: (context, AsyncSnapshot snapshot) {
         if (snapshot.data != null) {
           return ListView.builder(
+              scrollDirection: Axis.vertical,
+              shrinkWrap: true,
               itemCount: snapshot.data?.length,
               itemBuilder: (context, i) {
                 return ListTile(title: Text(snapshot.data[i].name));
               });
         } else {
-          return const Text("No Data");
+          return const Text("No Data from API");
         }
       },
     );
   }
-}
-
-class EmployeeModel {
-  String id;
-  String name;
-  String age;
-  EmployeeModel(this.id, this.name, this.age);
 }

@@ -24,7 +24,8 @@ class _HomeState extends State<Home> {
           child: Column(mainAxisAlignment: MainAxisAlignment.center, children: [
         Text("$data"),
         const SizedBox(height: 10),
-        ElevatedButton(onPressed: increase, child: const Text("Increase"))
+        ElevatedButton(
+            onPressed: increase, child: const Text("Increase with One"))
       ])),
       const API()
     ]);
